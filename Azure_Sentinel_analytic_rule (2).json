@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspace": {
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "id": "[concat(resourceId('Microsoft.OperationalInsights/workspaces/providers', parameters('workspace'), 'Microsoft.SecurityInsights'),'/alertRules/7079deb3-6017-43b5-a295-7f6227802d25')]",
+            "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/7079deb3-6017-43b5-a295-7f6227802d25')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+            "kind": "Scheduled",
+            "apiVersion": "2022-11-01-preview",
+            "properties": {
+                "displayName": "Description: Detects attack surface rules being used",
+                "description": null,
+                "severity": "Low",
+                "enabled": true,
+                "query": "// Description: Detects attack surface rules being used.\n// Author: Dylan Jones\nDeviceEvents\n| where ActionType startswith 'Asr'\n| extend IsAudit = parsejson(AdditionalFields).IsAudit\n| extend RuleId = parsejson(AdditionalFields).RuleId\n| extend Id = strcat(DeviceId, ' ', DeviceName) \n| project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, SHA1, MD5, AccountDomain, AccountName, RuleId, IsAudit, Id",
+                "queryFrequency": "PT1H",
+                "queryPeriod": "PT1H",
+                "triggerOperator": "GreaterThan",
+                "triggerThreshold": 10,
+                "suppressionDuration": "PT5H",
+                "suppressionEnabled": false,
+                "startTimeUtc": null,
+                "tactics": [],
+                "techniques": [],
+                "alertRuleTemplateName": null,
+                "incidentConfiguration": {
+                    "createIncident": false,
+                    "groupingConfiguration": {
+                        "enabled": false,
+                        "reopenClosedIncident": false,
+                        "lookbackDuration": "PT5H",
+                        "matchingMethod": "AllEntities",
+                        "groupByEntities": null,
+                        "groupByAlertDetails": null,
+                        "groupByCustomDetails": null
+                    }
+                },
+                "eventGroupingSettings": {
+                    "aggregationKind": "SingleAlert"
+                },
+                "alertDetailsOverride": null,
+                "customDetails": null,
+                "entityMappings": null,
+                "sentinelEntitiesMappings": null,
+                "templateVersion": null
+            }
+        }
+    ]
+}
